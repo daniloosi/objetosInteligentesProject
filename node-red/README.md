@@ -36,7 +36,7 @@ Orquestrador central da arquitetura. Recebe telemetria dos ESP32, aplica as regr
 ### InfluxDB Cloud
 As credenciais já estão preenchidas no `config-influxdb`. Verifique se o nó está configurado clicando duas vezes em qualquer nó **InfluxDB Out** e verificando se a conexão `InfluxDB Cloud - iotProject` está selecionada.
 
-### WhatsApp / CallMeBot ⚠️
+### WhatsApp / CallMeBot 
 O nó **"Montar URL CallMeBot"** contém dois placeholders que **precisam ser substituídos** antes de funcionar:
 
 ```javascript
@@ -78,11 +78,11 @@ Com os dois Wokwis rodando:
 3. Filtre por `measurement = telemetria`
 4. Deve mostrar dados de `corrente`, `bateria` e `presenca` para as bancadas 01 e 02
 
-**Critério:** dados aparecendo com timestamps atualizados a cada 10s ✅
+**Critério:** dados aparecendo com timestamps atualizados a cada 10s 
 
 ### Teste 2 — Regra 1: Ausência 10 minutos
 
-> ⚠️ Para testar sem esperar 10 minutos reais, abra o nó **"Regra 1 — Ausência 10 min"** e altere temporariamente:
+>  Para testar sem esperar 10 minutos reais, abra o nó **"Regra 1 — Ausência 10 min"** e altere temporariamente:
 > ```javascript
 > var TEMPO_LIMITE_MS = 1 * 60 * 1000; // 1 minuto para teste
 > ```
@@ -115,20 +115,20 @@ A bateria sobe automaticamente quando o botão está pressionado (bancada ocupad
 ### Teste 4 — Verificar todos os measurements no InfluxDB
 
 No Data Explorer do InfluxDB Cloud, verifique se os 4 measurements estão sendo populados:
-- `telemetria` — dados contínuos ✅
-- `status_atuador` — muda quando relé é acionado ✅
-- `eventos` — aparece após qualquer intervenção automática ✅
-- `notificacoes` — aparece após cada tentativa de envio WhatsApp ✅
+- `telemetria` — dados contínuos 
+- `status_atuador` — muda quando relé é acionado 
+- `eventos` — aparece após qualquer intervenção automática 
+- `notificacoes` — aparece após cada tentativa de envio WhatsApp 
 
 ## Critério de aprovação desta etapa
 
-✅ Fluxo importado e deployado sem erros (sem nós com borda vermelha)
-✅ Dados chegando no measurement `telemetria` do InfluxDB
-✅ Regra 1 (ausência) dispara comando OFF e grava evento
-✅ Religamento por presença funciona após Regra 1
-✅ Regra 2 (bateria 100%) desliga a bancada correta
-✅ Religamento por bateria baixa (20%) funciona
-✅ Measurement `eventos` populado com `tipo` e `motivo` corretos
-✅ WhatsApp recebendo alertas (após configurar CallMeBot)
+ Fluxo importado e deployado sem erros (sem nós com borda vermelha)
+ Dados chegando no measurement `telemetria` do InfluxDB
+ Regra 1 (ausência) dispara comando OFF e grava evento
+ Religamento por presença funciona após Regra 1
+ Regra 2 (bateria 100%) desliga a bancada correta
+ Religamento por bateria baixa (20%) funciona
+ Measurement `eventos` populado com `tipo` e `motivo` corretos
+ WhatsApp recebendo alertas (após configurar CallMeBot)
 
 Aprovada esta etapa, avançamos para a Etapa 6 — Dashboards no Grafana.
