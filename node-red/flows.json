@@ -1,0 +1,544 @@
+[
+    {
+        "id": "1311b2aee1a3c6cc",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "df03a890de60f48b",
+        "type": "mqtt in",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Presença (todas bancadas)",
+        "topic": "lab/bancada/+/presenca",
+        "qos": "0",
+        "datatype": "utf8",
+        "broker": "config-mqtt",
+        "inputs": 0,
+        "x": 310,
+        "y": 100,
+        "wires": [
+            [
+                "e3e06ce9300bbe83"
+            ]
+        ]
+    },
+    {
+        "id": "f5a6aeb907bfdca8",
+        "type": "mqtt in",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Corrente (todas bancadas)",
+        "topic": "lab/bancada/+/corrente",
+        "qos": "0",
+        "datatype": "utf8",
+        "broker": "config-mqtt",
+        "inputs": 0,
+        "x": 310,
+        "y": 160,
+        "wires": [
+            [
+                "ee75e3879a48f5a6"
+            ]
+        ]
+    },
+    {
+        "id": "e218388a5e77ac6e",
+        "type": "mqtt in",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Bateria (todas bancadas)",
+        "topic": "lab/bancada/+/bateria",
+        "qos": "0",
+        "datatype": "utf8",
+        "broker": "config-mqtt",
+        "inputs": 0,
+        "x": 310,
+        "y": 220,
+        "wires": [
+            [
+                "2ca21c1e531f45a0"
+            ]
+        ]
+    },
+    {
+        "id": "852e2a676d20e8fd",
+        "type": "mqtt in",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Status Atuador (todas bancadas)",
+        "topic": "lab/bancada/+/status",
+        "qos": "0",
+        "datatype": "utf8",
+        "broker": "config-mqtt",
+        "inputs": 0,
+        "x": 310,
+        "y": 280,
+        "wires": [
+            [
+                "28c671bf66034c52"
+            ]
+        ]
+    },
+    {
+        "id": "e3e06ce9300bbe83",
+        "type": "function",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Parse Presença",
+        "func": "// Extrai bancada_id do tópico: lab/bancada/01/presenca -> \"01\"\nvar partes = msg.topic.split(\"/\");\nvar bancadaId = partes[2];\n\nmsg.bancadaId = bancadaId;\nmsg.payload = parseInt(msg.payload); // converte \"0\" ou \"1\" para número\n\n// Salva no contexto global para uso nas regras de negócio\nvar estado = global.get(\"estado\") || {};\nif (!estado[bancadaId]) estado[bancadaId] = {};\nestado[bancadaId].presenca = msg.payload;\nestado[bancadaId].ultimaPresencaTs = Date.now();\n\n// Atualiza timestamp de ausência contínua\nif (msg.payload === 0) {\n    if (!estado[bancadaId].inicioAusencia) {\n        estado[bancadaId].inicioAusencia = Date.now();\n    }\n} else {\n    // Presença detectada: resetar contador de ausência\n    estado[bancadaId].inicioAusencia = null;\n}\n\nglobal.set(\"estado\", estado);\n\nreturn msg;",
+        "outputs": 1,
+        "x": 610,
+        "y": 100,
+        "wires": [
+            [
+                "1529425fbf962430",
+                "f474cb77016c2df2"
+            ]
+        ]
+    },
+    {
+        "id": "ee75e3879a48f5a6",
+        "type": "function",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Parse Corrente",
+        "func": "var partes = msg.topic.split(\"/\");\nvar bancadaId = partes[2];\n\nmsg.bancadaId = bancadaId;\nmsg.payload = parseFloat(msg.payload);\n\nvar estado = global.get(\"estado\") || {};\nif (!estado[bancadaId]) estado[bancadaId] = {};\nestado[bancadaId].corrente = msg.payload;\nglobal.set(\"estado\", estado);\n\nreturn msg;",
+        "outputs": 1,
+        "x": 610,
+        "y": 160,
+        "wires": [
+            [
+                "1529425fbf962430"
+            ]
+        ]
+    },
+    {
+        "id": "2ca21c1e531f45a0",
+        "type": "function",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Parse Bateria",
+        "func": "var partes = msg.topic.split(\"/\");\nvar bancadaId = partes[2];\n\nmsg.bancadaId = bancadaId;\nmsg.payload = parseFloat(msg.payload);\n\nvar estado = global.get(\"estado\") || {};\nif (!estado[bancadaId]) estado[bancadaId] = {};\nestado[bancadaId].bateria = msg.payload;\nglobal.set(\"estado\", estado);\n\nreturn msg;",
+        "outputs": 1,
+        "x": 610,
+        "y": 220,
+        "wires": [
+            [
+                "1529425fbf962430",
+                "02d37a61e4b10388"
+            ]
+        ]
+    },
+    {
+        "id": "28c671bf66034c52",
+        "type": "function",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Parse Status Atuador",
+        "func": "var partes = msg.topic.split(\"/\");\nvar bancadaId = partes[2];\n\nmsg.bancadaId = bancadaId;\nmsg.payload = parseInt(msg.payload);\n\nvar estado = global.get(\"estado\") || {};\nif (!estado[bancadaId]) estado[bancadaId] = {};\nestado[bancadaId].energizado = msg.payload;\nglobal.set(\"estado\", estado);\n\nreturn msg;",
+        "outputs": 1,
+        "x": 610,
+        "y": 280,
+        "wires": [
+            [
+                "3c72febaf12bf944"
+            ]
+        ]
+    },
+    {
+        "id": "1529425fbf962430",
+        "type": "function",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Montar Payload Telemetria",
+        "func": "var campo = msg.topic.split(\"/\")[3];\nvar valor = parseFloat(msg.payload);\n\nmsg.payload = \"telemetria,bancada_id=\" + msg.bancadaId +\n    \",laboratorio_id=lab_01 \" +\n    campo + \"=\" + valor +\n    \" \" + Math.floor(Date.now() / 1000);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 140,
+        "wires": [
+            [
+                "c3316d53064bab20",
+                "503e8783113d101d"
+            ]
+        ]
+    },
+    {
+        "id": "3c72febaf12bf944",
+        "type": "function",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Montar Payload Status Atuador",
+        "func": "var valorEnergizado = msg.payload;\n\nmsg.payload = \"status_atuador,bancada_id=\" + msg.bancadaId +\n    \" energizado=\" + valorEnergizado +\n    \" \" + Math.floor(Date.now() / 1000);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 280,
+        "wires": [
+            [
+                "acc4cacd09954c95"
+            ]
+        ]
+    },
+    {
+        "id": "f474cb77016c2df2",
+        "type": "function",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Regra 1 — Ausência 10 min",
+        "func": "// Verifica se TODAS as bancadas estão sem presença há mais de 10 minutos\nvar TEMPO_LIMITE_MS = 10 * 60 * 1000; // 10 minutos em ms\nvar estado = global.get(\"estado\") || {};\nvar agora = Date.now();\n\n// Verifica se há alguma bancada com presença detectada\nvar algumOcupado = false;\nvar bancadasIds = Object.keys(estado);\n\nif (bancadasIds.length === 0) return null; // ainda não recebeu dados\n\nfor (var i = 0; i < bancadasIds.length; i++) {\n    var b = estado[bancadasIds[i]];\n    if (b.presenca === 1) {\n        algumOcupado = true;\n        break;\n    }\n}\n\nif (algumOcupado) {\n    // Há presença: garante que todas as bancadas estejam energizadas\n    // (religamento por detecção de presença)\n    var comandos = [];\n    for (var j = 0; j < bancadasIds.length; j++) {\n        var bid = bancadasIds[j];\n        if (estado[bid].energizado === 0) {\n            // Estava desligada: religa\n            comandos.push({\n                payload: \"ON\",\n                topic: \"lab/bancada/\" + bid + \"/comando\",\n                bancadaId: bid,\n                motivo: \"presenca_detectada\",\n                tipo: \"religamento\"\n            });\n        }\n    }\n    if (comandos.length > 0) {\n        return [comandos, null]; // saída 1: comandos, saída 2: nenhum evento ainda\n    }\n    return null;\n}\n\n// Nenhuma bancada ocupada: verifica tempo de ausência contínua\nvar inicioAusenciaGeral = global.get(\"inicioAusenciaGeral\");\nif (!inicioAusenciaGeral) {\n    global.set(\"inicioAusenciaGeral\", agora);\n    return null;\n}\n\nvar tempoAusenteMs = agora - inicioAusenciaGeral;\n\nif (tempoAusenteMs >= TEMPO_LIMITE_MS) {\n    // Chegou no limite: desliga todas as bancadas que ainda estão energizadas\n    var acoes = [];\n    for (var k = 0; k < bancadasIds.length; k++) {\n        var bk = bancadasIds[k];\n        if (estado[bk].energizado !== 0) {\n            acoes.push({\n                payload: \"OFF\",\n                topic: \"lab/bancada/\" + bk + \"/comando\",\n                bancadaId: bk,\n                motivo: \"ausencia_excedida\",\n                tipo: \"desligamento\",\n                duracaoEstadoAnteriorS: Math.round(tempoAusenteMs / 1000)\n            });\n        }\n    }\n    // Reseta o contador para não disparar múltiplas vezes\n    global.set(\"inicioAusenciaGeral\", null);\n\n    if (acoes.length > 0) {\n        return [acoes, null];\n    }\n}\n\n// Reseta contador de ausência geral quando há presença\nif (algumOcupado) {\n    global.set(\"inicioAusenciaGeral\", null);\n}\n\nreturn null;",
+        "outputs": 2,
+        "x": 650,
+        "y": 420,
+        "wires": [
+            [
+                "5870fdd530890692"
+            ],
+            [
+                "d06bc41cc125931e"
+            ]
+        ]
+    },
+    {
+        "id": "02d37a61e4b10388",
+        "type": "function",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Regra 2 — Ciclo de Carga",
+        "func": "var bancadaId = msg.bancadaId;\nvar bateria = msg.payload;\nvar estado = global.get(\"estado\") || {};\n\nif (!estado[bancadaId]) return null;\n\nvar energizado = estado[bancadaId].energizado;\n\n// Bateria >= 100%: desliga se ainda estiver energizada\nif (bateria >= 100 && energizado !== 0) {\n    msg.payload = \"OFF\";\n    msg.topic = \"lab/bancada/\" + bancadaId + \"/comando\";\n    msg.motivo = \"bateria_carregada\";\n    msg.tipo = \"desligamento\";\n    msg.duracaoEstadoAnteriorS = 0;\n    return [msg, null];\n}\n\n// Bateria <= 20%: religa se estiver cortada\nif (bateria <= 20 && energizado === 0) {\n    msg.payload = \"ON\";\n    msg.topic = \"lab/bancada/\" + bancadaId + \"/comando\";\n    msg.motivo = \"bateria_baixa\";\n    msg.tipo = \"religamento\";\n    msg.duracaoEstadoAnteriorS = 0;\n    return [msg, null];\n}\n\nreturn null;",
+        "outputs": 2,
+        "x": 650,
+        "y": 500,
+        "wires": [
+            [
+                "5870fdd530890692"
+            ],
+            [
+                "d06bc41cc125931e"
+            ]
+        ]
+    },
+    {
+        "id": "5870fdd530890692",
+        "type": "function",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Roteador de Comandos",
+        "func": "// Suporta tanto msg única quanto array de msgs (regra de ausência gera array)\nif (Array.isArray(msg.payload)) {\n    // Múltiplos comandos: retorna array para o Node-RED processar individualmente\n    return msg.payload.map(function(cmd) {\n        return {\n            payload: cmd.payload,\n            topic: cmd.topic,\n            bancadaId: cmd.bancadaId,\n            motivo: cmd.motivo,\n            tipo: cmd.tipo,\n            duracaoEstadoAnteriorS: cmd.duracaoEstadoAnteriorS || 0\n        };\n    });\n}\n// Comando único: passa direto\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 460,
+        "wires": [
+            [
+                "12f873d5ebeaea05",
+                "d06bc41cc125931e",
+                "8e36e56ee72c4b7f"
+            ]
+        ]
+    },
+    {
+        "id": "12f873d5ebeaea05",
+        "type": "mqtt out",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Publica Comando → Atuador",
+        "topic": "",
+        "qos": "1",
+        "retain": "false",
+        "broker": "config-mqtt",
+        "x": 1150,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "d06bc41cc125931e",
+        "type": "function",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Montar Payload Evento",
+        "func": "var bancadaId = msg.bancadaId || msg.topic.split(\"/\")[2];\n\nmsg.payload = \"eventos,bancada_id=\" + bancadaId +\n              \",tipo=\" + (msg.tipo || \"desligamento\") +\n              \",motivo=\" + (msg.motivo || \"desconhecido\") +\n              \" duracao_estado_anterior_s=\" + (msg.duracaoEstadoAnteriorS || 0) +\n              \" \" + Math.floor(Date.now() / 1000);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 560,
+        "wires": [
+            [
+                "91ab3129dc9d7abd"
+            ]
+        ]
+    },
+    {
+        "id": "3f0ae7867ba66bd6",
+        "type": "function",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Gravar Resultado Notificação",
+        "func": "// whatsapp-cmb retorna sucesso se não lançou erro\nvar sucesso = (msg.payload && msg.payload.toString().includes(\"error\")) ? 0 : 1;\nvar latencia = Date.now() - (msg.inicioRequisicao || Date.now());\n\nmsg.payload = \"notificacoes,bancada_id=\" + (msg.bancadaId || \"desconhecido\") +\n              \",canal=whatsapp\" +\n              \" sucesso=\" + sucesso +\n              \",http_status=200\" +\n              \",latencia_ms=\" + latencia +\n              \" \" + Math.floor(Date.now() / 1000);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 740,
+        "wires": [
+            [
+                "3fb739da79f3365e"
+            ]
+        ]
+    },
+    {
+        "id": "503e8783113d101d",
+        "type": "debug",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Debug Telemetria",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 1370,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "a6b236e6ef9fa18c",
+        "type": "debug",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Debug Comandos",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 1330,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "c3316d53064bab20",
+        "type": "http request",
+        "z": "1311b2aee1a3c6cc",
+        "name": "InfluxDB → telemetria",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://SUA_URL_INFLUXDB/api/v2/write?org=SUA_ORG&bucket=SEU_BUCKET&precision=s",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Authorization",
+                "valueType": "other",
+                "valueValue": "Token SEU_TOKEN_INFLUXDB"
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "text/plain; charset=utf-8"
+            }
+        ],
+        "x": 1120,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "acc4cacd09954c95",
+        "type": "http request",
+        "z": "1311b2aee1a3c6cc",
+        "name": "InfluxDB → status atuador",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://us-east-1-1.aws.cloud2.influxdata.com/api/v2/write?org=1f4cbb9af79787d4&bucket=iotProject&precision=s",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Authorization",
+                "valueType": "other",
+                "valueValue": "Token lBOzUJtlgk1z-qIPGiuUNDFlN78beC6TkE9LYyBEGZsb99fbCGpLiy6vfzTIaLZaFkZoVPr4WJIyWQiXtCQMYA=="
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "text/plain; charset=utf-8"
+            }
+        ],
+        "x": 1150,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "91ab3129dc9d7abd",
+        "type": "http request",
+        "z": "1311b2aee1a3c6cc",
+        "name": "InfluxDB → status eventos",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://us-east-1-1.aws.cloud2.influxdata.com/api/v2/write?org=1f4cbb9af79787d4&bucket=iotProject&precision=s",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Authorization",
+                "valueType": "other",
+                "valueValue": "Token lBOzUJtlgk1z-qIPGiuUNDFlN78beC6TkE9LYyBEGZsb99fbCGpLiy6vfzTIaLZaFkZoVPr4WJIyWQiXtCQMYA=="
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "text/plain; charset=utf-8"
+            }
+        ],
+        "x": 1140,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3fb739da79f3365e",
+        "type": "http request",
+        "z": "1311b2aee1a3c6cc",
+        "name": "InfluxDB → notificações",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://us-east-1-1.aws.cloud2.influxdata.com/api/v2/write?org=1f4cbb9af79787d4&bucket=iotProject&precision=s",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Authorization",
+                "valueType": "other",
+                "valueValue": "Token lBOzUJtlgk1z-qIPGiuUNDFlN78beC6TkE9LYyBEGZsb99fbCGpLiy6vfzTIaLZaFkZoVPr4WJIyWQiXtCQMYA=="
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "text/plain; charset=utf-8"
+            }
+        ],
+        "x": 1130,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2ba2f31200e2794f",
+        "type": "node-red-contrib-whatsapp-cmb-send-message",
+        "z": "1311b2aee1a3c6cc",
+        "name": "GET CallMeBot API",
+        "credtype": "account",
+        "account": "1fb358a6521b8145",
+        "text": "payload",
+        "phonenumbervalue": "SEU_NUMERO_WHATSAPP",
+        "apikeyvalue": "4787503",
+        "apikeyinputtypemessage": "msg",
+        "phonenumberinputtypemessage": "msg",
+        "inputtypemessage": "msg",
+        "rejectssl": false,
+        "x": 1090,
+        "y": 660,
+        "wires": [
+            [
+                "3f0ae7867ba66bd6",
+                "a6b236e6ef9fa18c"
+            ]
+        ]
+    },
+    {
+        "id": "8e36e56ee72c4b7f",
+        "type": "function",
+        "z": "1311b2aee1a3c6cc",
+        "name": "Montar MSG WhatsApp",
+        "func": "if (msg.tipo !== \"desligamento\") return null;\n\nvar bancadaId = msg.bancadaId || msg.topic.split(\"/\")[2];\nvar motivoTexto = {\n    \"ausencia_excedida\": \"Laboratório vazio por mais de 10 minutos\",\n    \"bateria_carregada\": \"Bateria do notebook atingiu 100%\"\n};\n\nmsg.payload = \"⚡ Desligamento Automático\\n\"\n    + \"Bancada: \" + bancadaId + \"\\n\"\n    + \"Motivo: \" + (motivoTexto[msg.motivo] || msg.motivo) + \"\\n\"\n    + \"Horário: \" + new Date().toLocaleString(\"pt-BR\");\n\nmsg.bancadaId = bancadaId;\nmsg.inicioRequisicao = Date.now();\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 660,
+        "wires": [
+            [
+                "2ba2f31200e2794f"
+            ]
+        ]
+    },
+    {
+        "id": "config-mqtt",
+        "type": "mqtt-broker",
+        "name": "HiveMQ Público",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "nodered-lab-energia",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "1fb358a6521b8145",
+        "type": "node-red-contrib-whatsapp-cmb-account",
+        "name": "Whatsapp API"
+    },
+    {
+        "id": "c6a476a79e7e44f2",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-contrib-whatsapp-cmb": "1.0.3"
+        }
+    }
+]

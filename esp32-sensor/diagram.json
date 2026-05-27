@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "author": "Danilo Santos 10410905, Arthur Almeida 10437356",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-esp32-devkit-v1",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_bancada01",
+      "top": -90,
+      "left": 250,
+      "attrs": { "color": "green", "label": "Presença B01" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_bancada02",
+      "top": -90,
+      "left": 380,
+      "attrs": { "color": "blue", "label": "Presença B02" }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "pot_bancada01",
+      "top": 180,
+      "left": 250,
+      "attrs": { "value": "0" }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "pot_bancada02",
+      "top": 180,
+      "left": 400,
+      "attrs": { "value": "0" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+
+    [ "btn_bancada01:1.l", "esp:D14", "green", [ "v0" ] ],
+    [ "btn_bancada01:2.l", "esp:GND.1", "black", [ "v0" ] ],
+
+    [ "btn_bancada02:1.l", "esp:D27", "blue", [ "v0" ] ],
+    [ "btn_bancada02:2.l", "esp:GND.2", "black", [ "v0" ] ],
+
+    [ "pot_bancada01:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "pot_bancada01:GND", "esp:GND.3", "black", [ "v0" ] ],
+    [ "pot_bancada01:SIG", "esp:D34", "orange", [ "v0" ] ],
+
+    [ "pot_bancada02:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "pot_bancada02:GND", "esp:GND.4", "black", [ "v0" ] ],
+    [ "pot_bancada02:SIG", "esp:D35", "orange", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}

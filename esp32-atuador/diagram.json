@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "author": "Danilo Santos 10410905, Arthur Almeida 10437356",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-esp32-devkit-v1",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "rele_bancada01",
+      "top": -60,
+      "left": 280,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "rele_bancada02",
+      "top": 80,
+      "left": 280,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_bancada01",
+      "top": -60,
+      "left": 430,
+      "attrs": { "color": "green", "label": "B01 Energizada" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_bancada02",
+      "top": 80,
+      "left": 430,
+      "attrs": { "color": "green", "label": "B02 Energizada" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "res1",
+      "top": -40,
+      "left": 400,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "res2",
+      "top": 100,
+      "left": 400,
+      "attrs": { "value": "220" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+
+    [ "rele_bancada01:VCC", "esp:3V3",   "red",   [ "v0" ] ],
+    [ "rele_bancada01:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "rele_bancada01:IN",  "esp:D26",   "yellow",[ "v0" ] ],
+
+    [ "rele_bancada02:VCC", "esp:3V3",   "red",   [ "v0" ] ],
+    [ "rele_bancada02:GND", "esp:GND.2", "black", [ "v0" ] ],
+    [ "rele_bancada02:IN",  "esp:D25",   "yellow",[ "v0" ] ],
+
+    [ "esp:D18",       "res1:1",    "green", [ "v0" ] ],
+    [ "res1:2",        "led_bancada01:A", "green", [ "v0" ] ],
+    [ "led_bancada01:C", "esp:GND.3", "black", [ "v0" ] ],
+
+    [ "esp:D19",       "res2:1",    "blue",  [ "v0" ] ],
+    [ "res2:2",        "led_bancada02:A", "blue",  [ "v0" ] ],
+    [ "led_bancada02:C", "esp:GND.4", "black", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
