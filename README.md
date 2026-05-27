@@ -1,4 +1,4 @@
-# ⚡ Gestão Inteligente de Energia em Laboratórios Acadêmicos de Informática
+#  Gestão Inteligente de Energia em Laboratórios Acadêmicos de Informática
 
 > Projeto de IoT desenvolvido na Universidade Presbiteriana Mackenzie — Faculdade de Computação e Informática
 
@@ -6,7 +6,7 @@ Sistema de automação do fornecimento de energia em bancadas de laboratório, q
 
 ---
 
-## 📋 Índice
+##  Índice
 
 - [Sobre o Projeto](#sobre-o-projeto)
 - [Arquitetura](#arquitetura)
@@ -101,19 +101,19 @@ Este projeto propõe um protótipo de **tomada inteligente baseado em IoT** que 
 ## Estrutura do Repositório
 
 ```
-📦 iot-gestao-energia/
-├── 📁 esp32-sensor/
+ iot-gestao-energia/
+├──  esp32-sensor/
 │   ├── sketch.ino          # Firmware do Nó Sensor (Publisher)
 │   ├── diagram.json        # Diagrama de hardware Wokwi
 │   ├── libraries.txt       # Bibliotecas necessárias
 │   └── README.md           # Instruções e checklist de teste
 │
-├── 📁 esp32-atuador/
+├──  esp32-atuador/
 │   ├── sketch.ino          # Firmware do Nó Atuador (Subscriber)
 │   ├── diagram.json        # Diagrama de hardware Wokwi
 │   └── README.md           # Instruções e checklist de teste
 │
-├── 📁 node-red/
+├──  node-red/
 │   ├── flow.json           # Fluxo completo exportado
 │   └── README.md           # Instruções de importação e configuração
 │
@@ -173,7 +173,7 @@ var NUMERO_WHATSAPP = "55XXXXXXXXXXX"; // seu número com DDI+DDD
 var API_KEY = "SUA_API_KEY_CALLMEBOT"; // chave gerada pelo CallMeBot
 ```
 
-> 💡 Para obter a API Key do CallMeBot: salve o número +34 644 44 23 05 e envie a mensagem `I allow callmebot to send me messages` via WhatsApp.
+>  Para obter a API Key do CallMeBot: salve o número +34 644 44 23 05 e envie a mensagem `I allow callmebot to send me messages` via WhatsApp.
 
 ### 4. InfluxDB Cloud
 
