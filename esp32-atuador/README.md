@@ -9,7 +9,7 @@ Segundo componente da arquitetura. Assina tópicos de comando do Node-RED, acion
 3. A biblioteca **PubSubClient** já deve estar disponível se você a adicionou no projeto Sensor — caso contrário, adicione novamente
 4. Clique em ▶ para iniciar a simulação
 
-> ⚠️ Os dois projetos (Sensor e Atuador) devem rodar **simultaneamente** em abas separadas do Wokwi para que o ciclo completo funcione.
+>  Os dois projetos (Sensor e Atuador) devem rodar **simultaneamente** em abas separadas do Wokwi para que o ciclo completo funcione.
 
 ## O que esperar no Serial Monitor
 
@@ -94,11 +94,11 @@ Este teste valida o ciclo completo de comunicação entre os dois dispositivos.
 
 ## Critério de aprovação desta etapa
 
-✅ Wokwi mostra "Broker conectado" e "Aguardando comandos"
-✅ LEDs acesos ao iniciar (ambas energizadas por padrão)
-✅ Comando `OFF` apaga o LED e atualiza `status` para `0`
-✅ Comando `ON` acende o LED e atualiza `status` para `1`
-✅ Comando redundante não gera nova publicação de status
-✅ Ciclo completo Sensor → Atuador funcionando com os dois Wokwis abertos
+ Wokwi mostra "Broker conectado" e "Aguardando comandos"
+ LEDs acesos ao iniciar (ambas energizadas por padrão)
+ Comando `OFF` apaga o LED e atualiza `status` para `0`
+ Comando `ON` acende o LED e atualiza `status` para `1`
+ Comando redundante não gera nova publicação de status
+ Ciclo completo Sensor → Atuador funcionando com os dois Wokwis abertos
 
 Aprovada esta etapa, avançamos para a Etapa 4 — Fluxo Node-RED.
