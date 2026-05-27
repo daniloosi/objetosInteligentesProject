@@ -85,10 +85,10 @@ Publique `1` no mesmo tópico para reativar e ver a carga voltando (se o botão 
 
 ## Critério de aprovação desta etapa
 
-✅ Wokwi mostra "WiFi Conectado" e "MQTT Conectando OK"  
-✅ MQTT Explorer recebe mensagens nos 6 tópicos a cada 10s  
-✅ Pressionar botão muda o valor de `presenca` na próxima publicação  
-✅ Girar potenciômetro varia o valor de `corrente`  
-✅ Publicar manualmente em `status` é refletido na simulação de bateria
+ Wokwi mostra "WiFi Conectado" e "MQTT Conectando OK"  
+ MQTT Explorer recebe mensagens nos 6 tópicos a cada 10s  
+ Pressionar botão muda o valor de `presenca` na próxima publicação  
+ Girar potenciômetro varia o valor de `corrente`  
+ Publicar manualmente em `status` é refletido na simulação de bateria
 
 Só avance para a Etapa 3 (ESP32 Atuador) depois que todos os critérios acima estiverem ok.
