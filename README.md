@@ -19,6 +19,7 @@ Sistema de automação do fornecimento de energia em bancadas de laboratório, q
 - [Schema do Banco de Dados](#schema-do-banco-de-dados)
 - [Dashboards](#dashboards)
 - [Autores](#autores)
+- [Vídeo](#vídeo)
 
 ---
 
@@ -290,6 +291,12 @@ O dashboard **Gestão Inteligente de Energia — Lab 01** é composto por 4 pain
 Disciplina: Objetos Inteligentes Conectados
 
 ---
+
+## Vídeo
+
+O funcionamento de ponta a ponta do protótipo, a validação das regras de negócio no Node-RED e a exibição dos indicadores em tempo real podem ser acompanhados no vídeo abaixo:
+
+**Link:** [https://youtu.be/xBdChfcQaL4](https://youtu.be/xBdChfcQaL4)
 
 ## Licença
 
